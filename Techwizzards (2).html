@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Techwizarrds — Web Design Studio</title>
+  <meta name="description" content="Techwizarrds is a modern web design & development studio by Founder Imaad and Co‑Founder Shaheem. We craft fast, accessible, conversion‑focused websites." />
+  <meta name="theme-color" content="#111827" />
+
+  <!-- Favicon (SVG inline as data URI for single-file) -->
+  <link rel="icon" href='data:image/svg+xml;utf8,
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <defs>
+      <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+        <stop stop-color="%23a78bfa" offset="0"/>
+        <stop stop-color="%236ee7b7" offset="1"/>
+      </linearGradient>
+    </defs>
+    <rect width="100" height="100" rx="18" fill="%23111827"/>
+    <path d="M20 70 L50 20 L80 70" stroke="url(%23g)" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <circle cx="50" cy="72" r="6" fill="white"/>
+  </svg>' />
+
+  <style>
+    /* ============== Base / Reset ============== */
+    :root {
+      --bg: #0b1220;
+      --bg-soft: #0f172a;
+      --panel: rgba(255,255,255,0.06);
+      --panel-strong: rgba(255,255,255,0.12);
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --brand: #8b5cf6; /* violet-500 */
+      --brand-2: #22d3ee; /* cyan-400 */
+      --ok: #34d399;
+      --warn: #f59e0b;
+      --err: #ef4444;
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+      --glow: 0 0 0 0 rgba(139,92,246,0.0);
+      --maxw: 1200px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; scroll-behavior: smooth; }
+    body {
+      margin: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 80% -10%, rgba(34,211,238,0.15), transparent 60%),
+                  radial-gradient(1000px 500px at 20% 110%, rgba(139,92,246,0.18), transparent 60%),
+                  var(--bg);
+      color: var(--text);
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    .container { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+
+    /* ============== Utility ============== */
+    .btn { display: inline-flex; gap: 10px; align-items: center; border: 1px solid var(--panel-strong); padding: 12px 18px; border-radius: 999px; background: linear-gradient(135deg, rgba(139,92,246,0.25), rgba(34,211,238,0.2)); backdrop-filter: blur(8px); box-shadow: var(--shadow); transition: transform .2s ease, box-shadow .2s ease, background .2s ease; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(34,211,238,0.25), 0 8px 20px rgba(139,92,246,0.25); }
+    .btn:active { transform: translateY(0); }
+    .btn-ghost { background: transparent; border-color: var(--panel-strong); }
+    .chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--panel-strong); background: var(--panel); font-size: 12px; color: var(--muted); }
+    .grid { display: grid; gap: 24px; }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    @media (max-width: 1024px) { .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 800px) { .grid-3, .grid-2, .grid-4 { grid-template-columns: 1fr; } }
+    .card { background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); border: 1px solid var(--panel-strong); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); }
+    .title { font-size: 42px; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 8px; }
+    .subtitle { font-size: 16px; color: var(--muted); margin: 0 0 22px; }
+    .section { padding: 90px 0; position: relative; }
+    .kicker { text-transform: uppercase; letter-spacing: .18em; font-size: 12px; color: var(--brand-2); margin-bottom: 10px; }
+    .stroke { -webkit-text-stroke: 1px rgba(255,255,255,0.45); color: transparent; }
+
+    /* ============== Header / Nav ============== */
+    header { position: sticky; top: 0; z-index: 50; backdrop-filter: saturate(140%) blur(8px); background: rgba(11,18,32,0.6); border-bottom: 1px solid var(--panel-strong); }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; }
+    .logo { width: 36px; height: 36px; border-radius: 10px; background: conic-gradient(from 0deg at 50% 50%, #8b5cf6, #22d3ee, #34d399, #f472b6, #8b5cf6); box-shadow: 0 0 40px rgba(139,92,246,.35); }
+    nav ul { display: flex; list-style: none; gap: 18px; margin: 0; padding: 0; }
+    nav a { padding: 8px 12px; border-radius: 10px; color: var(--muted); transition: color .2s ease, background .2s ease; }
+    nav a:hover { color: var(--text); background: var(--panel); }
+    .nav-cta { display: flex; gap: 12px; align-items: center; }
+    .menu { display: none; }
+    @media (max-width: 900px) {
+      nav ul { display: none; }
+      .menu { display: inline-flex; }
+    }
+
+    /* ============== Hero ============== */
+    .hero { position: relative; padding: 96px 0 60px; }
+    .hero-wrap { display: grid; grid-template-columns: 1.2fr 1fr; gap: 28px; align-items: center; }
+    @media (max-width: 1000px) { .hero-wrap { grid-template-columns: 1fr; } }
+    .hero h1 { font-size: clamp(40px, 5vw, 64px); line-height: 1.05; margin: 0 0 12px; }
+    .hero p { font-size: 18px; color: var(--muted); margin-bottom: 24px; }
+    .hero-media { position: relative; height: 380px; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--panel-strong); }
+    .hero-canvas { position: absolute; inset: 0; background: radial-gradient(600px 300px at 30% 0%, rgba(34,211,238,0.18), transparent 60%), radial-gradient(600px 300px at 70% 100%, rgba(139,92,246,0.2), transparent 60%);}
+    .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.06) 1px, transparent 1px); background-size: 40px 40px; mask-image: radial-gradient(closest-side, rgba(0,0,0,.9), rgba(0,0,0,0)); }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 24px; }
+    .stat { background: var(--panel); border: 1px solid var(--panel-strong); padding: 14px; border-radius: 14px; text-align: center; }
+    .stat b { font-size: 22px; }
+
+    /* ============== Services ============== */
+    .service { display: grid; grid-template-columns: 52px 1fr; gap: 16px; }
+    .icon { width: 52px; height: 52px; display: grid; place-items: center; border-radius: 14px; background: linear-gradient(135deg, rgba(139,92,246,.25), rgba(34,211,238,.25)); border: 1px solid var(--panel-strong); }
+
+    /* ============== Portfolio ============== */
+    .work { position: relative; overflow: hidden; border-radius: var(--radius); border: 1px solid var(--panel-strong); background: #0d1526; }
+    .work img { width: 100%; height: 220px; object-fit: cover; filter: saturate(1.1) contrast(1.02); }
+    .work .meta { padding: 16px; display: flex; align-items: center; justify-content: space-between; }
+    .badge { font-size: 12px; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--panel-strong); color: var(--muted); }
+
+    /* ============== Pricing ============== */
+    .pricing { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .plan { position: relative; overflow: hidden; }
+    .plan.highlight { border-color: rgba(139,92,246,.45); box-shadow: 0 10px 40px rgba(139,92,246,.25); }
+    .price { font-size: 38px; margin: 12px 0; }
+    .plan ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; color: var(--muted); }
+
+    /* ============== Testimonials ============== */
+    .testi { display: grid; gap: 18px; }
+    .quote { font-size: 16px; color: #cbd5e1; }
+    .avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #22d3ee, #8b5cf6); display: inline-block; margin-right: 10px; }
+
+    /* ============== CTA Banner ============== */
+    .cta { background: linear-gradient(135deg, rgba(139,92,246,.25), rgba(34,211,238,.25)); border: 1px solid var(--panel-strong); border-radius: var(--radius); padding: 28px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+    /* ============== Footer ============== */
+    footer { padding: 60px 0 30px; border-top: 1px solid var(--panel-strong); background: rgba(255,255,255,0.02); }
+    .foot { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 24px; }
+    .foot h4 { margin: 0 0 12px; }
+    .foot ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; color: var(--muted); }
+    .foot a:hover { color: var(--text); }
+    @media (max-width: 900px) { .foot { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { .foot { grid-template-columns: 1fr; } }
+
+    /* ============== Animations ============== */
+    @keyframes floaty { from { transform: translateY(0); } 50% { transform: translateY(-8px); } to { transform: translateY(0); } }
+    .floaty { animation: floaty 6s ease-in-out infinite; }
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ============== Accessibility helpers ============== */
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    /* ============== Theme Toggle ============== */
+    .theme-toggle { border-radius: 12px; border: 1px solid var(--panel-strong); padding: 10px 12px; background: var(--panel); cursor: pointer; }
+    .theme-light {
+      --bg: #f8fafc; --bg-soft: #f1f5f9; --panel: rgba(17,24,39,0.04); --panel-strong: rgba(17,24,39,0.12);
+      --text: #0f172a; --muted: #475569; --brand: #7c3aed; --brand-2: #06b6d4;
+      background: radial-gradient(1200px 600px at 80% -10%, rgba(6,182,212,0.15), transparent 60%),
+                  radial-gradient(1000px 500px at 20% 110%, rgba(124,58,237,0.18), transparent 60%),
+                  var(--bg);
+    }
+  </style>
+</head>
+<body>
+  <!-- ==================== Header ==================== -->
+  <header>
+    <div class="container nav">
+      <a href="#home" class="brand" aria-label="Techwizarrds Home">
+        <span class="logo" aria-hidden="true"></span>
+        <span>Tech<span class="stroke">wizarrds</span></span>
+      </a>
+      <nav aria-label="Primary">
+        <ul>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#work">Portfolio</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#testimonials">Testimonials</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="nav-cta">
+        <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
+        <a class="btn" href="https://wa.me/918899019241" target="_blank" rel="noopener">WhatsApp</a>
+        <button class="menu btn-ghost" id="mobileMenuBtn" aria-label="Open menu">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== Mobile Menu ==================== -->
+  <div id="mobileMenu" class="container" style="display:none; padding-bottom: 16px;">
+    <div class="card" role="dialog" aria-modal="false" aria-label="Mobile Navigation">
+      <nav>
+        <ul style="display:grid; gap:10px;">
+          <li><a href="#services" class="mm-link">Services</a></li>
+          <li><a href="#work" class="mm-link">Portfolio</a></li>
+          <li><a href="#pricing" class="mm-link">Pricing</a></li>
+          <li><a href="#testimonials" class="mm-link">Testimonials</a></li>
+          <li><a href="#contact" class="mm-link">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <!-- ==================== Hero ==================== -->
+  <section id="home" class="hero section">
+    <div class="container hero-wrap">
+      <div>
+        <div class="chip">✨ Founder: <b style="margin-left:6px">Imaad</b> • Co‑Founder: <b style="margin-left:6px">Shaheem</b></div>
+        <h1>We design websites that look <span style="color:var(--brand-2)">stunning</span> and convert <span style="color:var(--brand)">customers</span>.</h1>
+        <p>Techwizarrds is a premium web design studio building fast, accessible, SEO‑ready, and mobile‑first experiences. From landing pages to complex web apps—we deliver pixel‑perfect craft.</p>
+        <div style="display:flex; gap:12px; flex-wrap: wrap;">
+          <a class="btn" href="#contact">Get a Free Quote</a>
+          <a class="btn btn-ghost" href="#work">See Our Work</a>
+        </div>
+        <div class="stats">
+          <div class="stat"><b>100+ Projects</b><div class="subtitle" style="margin:0">delivered on time</div></div>
+          <div class="stat"><b>98% Satisfaction</b><div class="subtitle" style="margin:0">client happiness</div></div>
+          <div class="stat"><b>1‑2s</b><div class="subtitle" style="margin:0">typical page load</div></div>
+        </div>
+      </div>
+      <div class="hero-media card floaty" aria-hidden="true">
+        <div class="hero-canvas"></div>
+        <div class="hero-grid"></div>
+        <div style="position:absolute; inset:auto 20px 20px 20px; display:flex; gap:12px; flex-wrap:wrap;">
+          <span class="chip">⚡️ Next‑Gen UI</span>
+          <span class="chip">📱 Mobile‑First</span>
+          <span class="chip">🧪 A/B Tested</span>
+          <span class="chip">🔍 SEO</span>
+          <span class="chip">♿ Accessible</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== Services ==================== -->
+  <section id="services" class="section">
+    <div class="container">
+      <div class="kicker">What we do</div>
+      <h2 class="title">Full‑stack web design & growth services</h2>
+      <p class="subtitle">From idea to impact. We combine design, code, and analytics to launch and scale your digital presence.</p>
+      <div class="grid grid-3">
+        <div class="card service reveal">
+          <div class="icon">🎨</div>
+          <div>
+            <h3 style="margin:0 0 6px">Brand & UI Design</h3>
+            <p class="subtitle">Visual identity, style guides, high‑fidelity UI kits, and component libraries that scale.</p>
+          </div>
+        </div>
+        <div class="card service reveal">
+          <div class="icon">💻</div>
+          <div>
+            <h3 style="margin:0 0 6px">Web Development</h3>
+            <p class="subtitle">Clean, maintainable code with modern stacks. Performance, security, and best practices baked in.</p>
+          </div>
+        </div>
+        <div class="card service reveal">
+          <div class="icon">🚀</div>
+          <div>
+            <h3 style="margin:0 0 6px">Growth & SEO</h3>
+            <p class="subtitle">Technical SEO, analytics, funnels, and CRO to turn visitors into customers.</p>
+          </div>
+        </div>
+        <div class="card service reveal">
+          <div class="icon">🛍️</div>
+          <div>
+            <h3 style="margin:0 0 6px">eCommerce</h3>
+            <p class="subtitle">Shopify/Headless storefronts, fast checkout, and product page optimization.</p>
+          </div>
+        </div>
+        <div class="card service reveal">
+          <div class="icon">🔐</div>
+          <div>
+            <h3 style="margin:0 0 6px">Security & Audits</h3>
+            <p class="subtitle">OWASP‑aware builds, HTTPS, CSP, and regular audits to keep your site safe.</p>
+          </div>
+        </div>
+        <div class="card service reveal">
+          <div class="icon">🧩</div>
+          <div>
+            <h3 style="margin:0 0 6px">Integrations</h3>
+            <p class="subtitle">CRMs, payments, chatbots, analytics, email marketing—seamlessly wired.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== Portfolio ==================== -->
+  <section id="work" class="section">
+    <div class="container">
+      <div class="kicker">Selected work</div>
+      <h2 class="title">Recent projects we’re proud of</h2>
+      <p class="subtitle">A mix of landing pages, product sites, and apps. Placeholder images are used—you can replace with your own screenshots.</p>
+      <div class="grid grid-3">
+        <article class="work reveal">
+          <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop" alt="SaaS dashboard project"/>
+          <div class="meta">
+            <div>
+              <strong>SaaS Pulse</strong>
+              <div class="subtitle" style="margin:4px 0 0">B2B analytics dashboard</div>
+            </div>
+            <span class="badge">Performance 99</span>
+          </div>
+        </article>
+        <article class="work reveal">
+          <img src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=1200&auto=format&fit=crop" alt="Shop website project"/>
+          <div class="meta">
+            <div>
+              <strong>Zen Store</strong>
+              <div class="subtitle" style="margin:4px 0 0">Headless commerce</div>
+            </div>
+            <span class="badge">+23% CR</span>
+          </div>
+        </article>
+        <article class="work reveal">
+          <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1200&auto=format&fit=crop" alt="Landing page project"/>
+          <div class="meta">
+            <div>
+              <strong>Nova Launch</strong>
+              <div class="subtitle" style="margin:4px 0 0">Product launch site</div>
+            </div>
+            <span class="badge">1.2s LCP</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== Pricing ==================== -->
+  <section id="pricing" class="section">
+    <div class="container">
+      <div class="kicker">Simple pricing</div>
+      <h2 class="title">Clear plans for any stage</h2>
+      <p class="subtitle">Transparent, value‑packed pricing. Custom quotes available for complex projects.</p>
+      <div class="pricing">
+        <div class="card plan reveal">
+          <h3>Starter</h3>
+          <div class="price">₹9,999</div>
+          <ul>
+            <li>Single‑page site</li>
+            <li>Responsive design</li>
+            <li>Basic SEO</li>
+            <li>Contact form</li>
+            <li>3 revisions</li>
+          </ul>
+          <div style="margin-top:14px; display:flex; gap:10px;">
+            <a class="btn" href="#contact">Choose Starter</a>
+            <span class="chip">Best for MVP</span>
+          </div>
+        </div>
+        <div class="card plan highlight reveal">
+          <h3>Standard</h3>
+          <div class="price">₹1,500</div>
+          <ul>
+            <li>Multi‑page website</li>
+            <li>Advanced SEO</li>
+            <li>Analytics setup</li>
+            <li>Performance tuning</li>
+            <li>5 revisions</li>
+          </ul>
+          <div style="margin-top:14px; display:flex; gap:10px;">
+            <a class="btn" href="#contact">Choose Standard</a>
+            <span class="chip">Most Popular</span>
+          </div>
+        </div>
+        <div class="card plan reveal">
+          <h3>Business</h3>
+          <div class="price">₹5,500</div>
+          <ul>
+            <li>Custom design system</li>
+            <li>Integrations & automations</li>
+            <li>eCommerce ready</li>
+            <li>Ongoing optimization</li>
+            <li>Priority support</li>
+          </ul>
+          <div style="margin-top:14px; display:flex; gap:10px;">
+            <a class="btn" href="#contact">Choose Business</a>
+            <span class="chip">For growth</span>
+          </div>
+        </div>
+      </div>
+      <p class="subtitle" style="margin-top:10px">Need something tailored? <a href="#contact" style="text-decoration: underline;">Get a custom quote</a>.</p>
+    </div>
+  </section>
+
+  <!-- ==================== Testimonials ==================== -->
+  <section id="testimonials" class="section">
+    <div class="container">
+      <div class="kicker">Happy clients</div>
+      <h2 class="title">Results that speak for themselves</h2>
+      <div class="grid grid-3 testi">
+        <div class="card reveal">
+          <div class="quote">“Techwizarrds transformed our online presence. Traffic doubled and sign‑ups jumped by 40%.”</div>
+          <div style="margin-top:12px; display:flex; align-items:center;">
+            <span class="avatar"></span>
+            <div>
+              <b>Rohan Singh</b>
+              <div class="subtitle" style="margin:2px 0 0">CEO, Finlytics</div>
+            </div>
+          </div>
+        </div>
+        <div class="card reveal">
+          <div class="quote">“Beautiful design, clean code, and delivered early. Our store now loads in under 2 seconds.”</div>
+          <div style="margin-top:12px; display:flex; align-items:center;">
+            <span class="avatar"></span>
+            <div>
+              <b>Alisha Mehta</b>
+              <div class="subtitle" style="margin:2px 0 0">Founder, ZenMart</div>
+            </div>
+          </div>
+        </div>
+        <div class="card reveal">
+          <div class="quote">“Professional team with great communication. They handled SEO and our leads skyrocketed.”</div>
+          <div style="margin-top:12px; display:flex; align-items:center;">
+            <span class="avatar"></span>
+            <div>
+              <b>Vikram Rao</b>
+              <div class="subtitle" style="margin:2px 0 0">Head of Growth, Bolt</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FAQ ==================== -->
+  <section id="faq" class="section">
+    <div class="container">
+      <div class="kicker">Questions</div>
+      <h2 class="title">FAQ</h2>
+      <div class="grid grid-2">
+        <div class="card reveal">
+          <details>
+            <summary><b>How long does a typical project take?</b></summary>
+            <p class="subtitle">Landing pages: ~1–2 weeks. Multi‑page sites: ~3–5 weeks. Complex apps vary—request a timeline with your brief.</p>
+          </details>
+        </div>
+        <div class="card reveal">
+          <details>
+            <summary><b>Do you provide hosting & domains?</b></summary>
+            <p class="subtitle">We can set up on your preferred provider (Netlify, Vercel, Hostinger, etc.) and guide you through domain connection.</p>
+          </details>
+        </div>
+        <div class="card reveal">
+          <details>
+            <summary><b>What tech stacks do you use?</b></summary>
+            <p class="subtitle">HTML/CSS/JS, React/Next, Node, CMS (WordPress/Headless), and performance‑first tooling. We choose the right tool for the job.</p>
+          </details>
+        </div>
+        <div class="card reveal">
+          <details>
+            <summary><b>Can you redesign an existing site?</b></summary>
+            <p class="subtitle">Absolutely. We start with an audit to identify quick wins, then redesign with measurable goals.</p>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CTA ==================== -->
+  <section class="section">
+    <div class="container">
+      <div class="cta card reveal">
+        <div>
+          <h3 style="margin:0 0 6px">Ready to build something great?</h3>
+          <p class="subtitle" style="margin:0">Tell us about your idea. We’ll reply within 24 hours with next steps.</p>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap: wrap;">
+          <a class="btn" href="#contact">Start a Project</a>
+          <a class="btn btn-ghost" href="mailto:imaadulialam25@gmail.com">Email Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== Contact ==================== -->
+  <section id="contact" class="section">
+    <div class="container">
+      <div class="kicker">Contact</div>
+      <h2 class="title">Let’s talk</h2>
+      <p class="subtitle">Share a few details and we’ll get back to you. Or ping us on WhatsApp: <a href="https://wa.me/918899019241" target="_blank" rel="noopener">+91 88990 19241</a></p>
+
+      <div class="grid grid-2">
+        <form id="contactForm" class="card reveal" novalidate>
+          <div class="grid grid-2">
+            <div>
+              <label for="name">Name</label>
+              <input id="name" name="name" type="text" required placeholder="Your name" class="in" />
+            </div>
+            <div>
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" required placeholder="you@example.com" class="in" />
+            </div>
+          </div>
+          <div class="grid grid-2">
+            <div>
+              <label for="budget">Budget (INR)</label>
+              <input id="budget" name="budget" type="number" min="0" step="500" placeholder="e.g., 20000" class="in" />
+            </div>
+            <div>
+              <label for="type">Project Type</label>
+              <select id="type" name="type" class="in">
+                <option>Landing Page</option>
+                <option>Business Website</option>
+                <option>eCommerce</option>
+                <option>Web App</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label for="message">Project Details</label>
+            <textarea id="message" name="message" rows="5" required placeholder="Tell us about your goals, timeline, and any links" class="in"></textarea>
+          </div>
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap: wrap;">
+            <button class="btn" type="submit">Send Message</button>
+            <span id="formStatus" class="subtitle" role="status" aria-live="polite"></span>
+          </div>
+        </form>
+
+        <div class="card reveal">
+          <h3 style="margin-top:0">Contact details</h3>
+          <ul style="list-style:none; padding:0; margin:0; display:grid; gap:10px;">
+            <li>📧 <a href="mailto:imaadulialam25@gmail.com">imaadulialam25@gmail.com</a></li>
+            <li>📱 <a href="tel:+918899019241">+91 88990 19241</a></li>
+            <li>🧙‍♂️ Techwizarrds — Founder: <b>Imaad</b>, Co‑Founder: <b>Shaheem</b></li>
+            <li>🕘 Mon–Sat, 9am–7pm IST</li>
+          </ul>
+          <div style="height:14px"></div>
+          <h4 style="margin:0 0 8px">Why choose us</h4>
+          <ul style="list-style: '✓  '; padding-left: 20px; margin:0; display:grid; gap:6px; color:var(--muted)">
+            <li>Design‑first + engineering excellence</li>
+            <li>Performance & accessibility as defaults</li>
+            <li>Honest timelines and clear communication</li>
+            <li>Post‑launch support & growth</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== Footer ==================== -->
+  <footer>
+    <div class="container foot">
+      <div>
+        <div class="brand"><span class="logo"></span><span>Techwizarrds</span></div>
+        <p class="subtitle">We craft delightful web experiences that help businesses grow.</p>
+        <div style="display:flex; gap:10px; flex-wrap: wrap;">
+          <a class="btn btn-ghost" href="mailto:imaadulialam25@gmail.com">Email</a>
+          <a class="btn btn-ghost" href="https://wa.me/918899019241" target="_blank" rel="noopener">WhatsApp</a>
+        </div>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#services">UI/UX Design</a></li>
+          <li><a href="#services">Development</a></li>
+          <li><a href="#services">eCommerce</a></li>
+          <li><a href="#services">SEO & Analytics</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#work">Portfolio</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Terms</a></li>
+          <li><a href="#">Cookies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container" style="margin-top:14px; color:var(--muted); font-size: 14px;">
+      © <span id="year"></span> Techwizarrds. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- ==================== Scripts ==================== -->
+  <script>
+    // Helpers
+    const $ = (s, r=document) => r.querySelector(s);
+    const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+
+    // Theme toggle
+    const themeToggle = $('#themeToggle');
+    const preferred = localStorage.getItem('theme') || 'dark';
+    if (preferred === 'light') document.body.classList.add('theme-light');
+    themeToggle.textContent = document.body.classList.contains('theme-light') ? '🌞' : '🌙';
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('theme-light');
+      const light = document.body.classList.contains('theme-light');
+      localStorage.setItem('theme', light ? 'light' : 'dark');
+      themeToggle.textContent = light ? '🌞' : '🌙';
+    });
+
+    // Mobile menu
+    $('#mobileMenuBtn').addEventListener('click', () => {
+      const mm = $('#mobileMenu');
+      mm.style.display = mm.style.display === 'none' || !mm.style.display ? 'block' : 'none';
+    });
+    $$('.mm-link').forEach(a => a.addEventListener('click', () => $('#mobileMenu').style.display = 'none'));
+
+    // Scroll reveal
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.18 });
+    $$('.reveal').forEach(el => io.observe(el));
+
+    // Contact form (demo only)
+    const form = $('#contactForm');
+    const status = $('#formStatus');
+    const validate = () => {
+      if (!form.name.value.trim()) return 'Please enter your name';
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.value)) return 'Please enter a valid email';
+      if (!form.message.value.trim()) return 'Please add some project details';
+      return null;
+    }
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const v = validate();
+      if (v) { status.textContent = v; status.style.color = 'var(--warn)'; return; }
+      status.textContent = 'Sending…'; status.style.color = 'var(--muted)';
+      // Simulate network request.
+      setTimeout(() => {
+        status.textContent = 'Thanks! We\'ll get back to you shortly.';
+        status.style.color = 'var(--ok)';
+        form.reset();
+      }, 900);
+    });
+
+    // Current year
+    $('#year').textContent = new Date().getFullYear();
+
+    // Enhance inputs
+    const styleInputs = () => {
+      const css = `
+        .in { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--panel-strong); background: var(--panel); color: var(--text); outline: none; transition: box-shadow .2s ease, border-color .2s ease; }
+        .in:focus { border-color: var(--brand); box-shadow: 0 0 0 4px rgba(139,92,246, .25); }
+        label { display:block; font-size: 14px; color: var(--muted); margin-bottom: 6px; }
+        summary { cursor: pointer; }
+      `;
+      const el = document.createElement('style');
+      el.innerHTML = css; document.head.appendChild(el);
+    }
+    styleInputs();
+
+    // Simple keyboard navigation hint: skip links for accessibility
+    const skip = document.createElement('a');
+    skip.href = '#home'; skip.textContent = 'Skip to content';
+    skip.className = 'sr-only';
+    document.body.prepend(skip);
+
+    // Decorative mouse glow
+    const glow = document.createElement('div');
+    glow.style.position = 'fixed'; glow.style.pointerEvents = 'none'; glow.style.inset = '0'; glow.style.zIndex = '-1';
+    const gInner = document.createElement('div');
+    gInner.style.position = 'absolute'; gInner.style.width = '240px'; gInner.style.height = '240px'; gInner.style.borderRadius = '50%';
+    gInner.style.filter = 'blur(60px)'; gInner.style.opacity = '.35';
+    gInner.style.background = 'radial-gradient(circle, rgba(139,92,246,.6), rgba(34,211,238,.5), transparent 70%)';
+    glow.appendChild(gInner); document.body.appendChild(glow);
+    window.addEventListener('pointermove', (e) => {
+      gInner.style.left = (e.clientX - 120) + 'px';
+      gInner.style.top = (e.clientY - 120) + 'px';
+    });
+
+    // Simple testimonial rotator (auto)
+    const quotes = $$('#testimonials .quote');
+    let qi = 0; setInterval(() => {
+      quotes.forEach((q, i) => q.style.opacity = (i === qi ? '1' : '.55'));
+      qi = (qi + 1) % quotes.length;
+    }, 2600);
+  </script>
+</body>
+</html>
